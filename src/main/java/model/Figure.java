@@ -147,21 +147,26 @@ public abstract class Figure implements Observer {
     public String toString(){
         if (this.getClass() == Pawn.class){
             return "" + this.getField();
-        }
-        if (this.getClass() == Rock.class){
-            return "R" + this.getField();
-        }
-        if (this.getClass() == Knight.class){
-            return "N" + this.getField();
-        }
-        if (this.getClass() == Bishop.class){
-            return "B" + this.getField();
-        }
-        if (this.getClass() == Queen.class){
-            return "Q" + this.getField();
-        }
-        if (this.getClass() == King.class){
-            return "K" + this.getField();
+        }else {
+            if (this.getClass() == Rock.class) {
+                return "R" + this.getField();
+            } else {
+                if (this.getClass() == Knight.class) {
+                    return "N" + this.getField();
+                } else {
+                    if (this.getClass() == Bishop.class) {
+                        return "B" + this.getField();
+                    } else {
+                        if (this.getClass() == Queen.class) {
+                            return "Q" + this.getField();
+                        } else {
+                            if (this.getClass() == King.class) {
+                                return "K" + this.getField();
+                            }
+                        }
+                    }
+                }
+            }
         }
         return null;
     }

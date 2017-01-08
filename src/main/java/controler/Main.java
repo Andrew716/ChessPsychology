@@ -22,7 +22,7 @@ public class Main {
     private static List<String> whiteTurns = new ArrayList<String>();
     private static List<String> blackTurns = new ArrayList<String>();
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException{
 //        Board board = Board.getInstance();
 //        printFigures();
 //        printFile();
@@ -42,6 +42,21 @@ public class Main {
 //                System.out.println(currentFigure.toString() + currentFigure.getPossibleFieldsToMove());
 //            }
 //        }
+        String importantInfo[] = {
+                "Mares eat oats",
+                "Does eat oats",
+                "Little lambs eat ivy",
+                "A kid will eat ivy too"
+        };
+
+        for (int i = 0;
+             i < importantInfo.length;
+             i++) {
+            //Pause for 4 seconds
+            Thread.sleep(4000);
+            //Print a message
+            System.out.println(importantInfo[i]);
+        }
     }
 
     public static void printFile(){
