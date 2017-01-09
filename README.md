@@ -1,2 +1,1 @@
-# ChessPsychology
-# testr
+# This project counts parameters by specified logic taken from chess which are needed for psychology.
