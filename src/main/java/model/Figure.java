@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,8 +16,10 @@ public abstract class Figure implements Observer {
     private int numberOfEnemiesAttackMe;
     private Set<Figure> whoCouldBeKilled = new LinkedHashSet<Figure>();
     private Set<Field> attackedFields = new LinkedHashSet<Field>();
+    private Set<Field> fieldsUnderMyInfluence = new LinkedHashSet<Field>();
     private Set<Field> possibleFieldsToMove = new LinkedHashSet<Field>();
     protected abstract void attackedFields();
+    public abstract void possibleTurns();
 
     public Figure(Field field, Color color) {
         this.field = field;
@@ -36,6 +37,23 @@ public abstract class Figure implements Observer {
 
     public void update(Field field){
         this.field = field;
+        this.enemiesAttackMe.clear();
+        this.aliensProtectMe.clear();
+        this.whoCouldBeKilled.clear();
+        this.attackedFields.clear();
+        this.possibleFieldsToMove.clear();
+        if (this.getClass() == King.class){
+            ((King) this).setOpportunityToCastling(false);
+        }else {
+            if (this.getClass() == Rock.class){
+                ((Rock) this).setOpportunityToCastling(false);
+            }
+        }
+        attackedFields();
+        possibleTurns();
+    }
+
+    public void update(){
         this.enemiesAttackMe.clear();
         this.aliensProtectMe.clear();
         this.whoCouldBeKilled.clear();
@@ -59,6 +77,10 @@ public abstract class Figure implements Observer {
 
     public Set getAttackedFields() {
         return attackedFields;
+    }
+
+    public Set<Field> getFieldsUnderMyInfluence() {
+        return fieldsUnderMyInfluence;
     }
 
     public void addEnemy(Figure figure){
@@ -91,22 +113,22 @@ public abstract class Figure implements Observer {
         numberOfAliensProtectMe++;
     }
 
-    public void possibleTurns(){
-        Iterator<Field> iterator = attackedFields.iterator();
-        while (iterator.hasNext()){
-            Field currentField = iterator.next();
-            if (currentField.isTaken()){
-                if (this.getColor() == currentField.getFigureByField().getColor()){
-                    currentField.getFigureByField().addAlien(this);
-                }else {
-                    currentField.getFigureByField().addEnemy(this);
-                    this.getWhoCouldBeKilled().add(currentField.getFigureByField());
-                }
-            }else {
-                possibleFieldsToMove.add(currentField);
-            }
-        }
-    }
+//    public void possibleTurns(){
+//        Iterator<Field> iterator = attackedFields.iterator();
+//        while (iterator.hasNext()){
+//            Field currentField = iterator.next();
+//            if (currentField.isTaken()){
+//                if (this.getColor() == currentField.getFigureByField().getColor()){
+//                    currentField.getFigureByField().addAlien(this);
+//                }else {
+//                    currentField.getFigureByField().addEnemy(this);
+//                    this.getWhoCouldBeKilled().add(currentField.getFigureByField());
+//                }
+//            }else {
+//                possibleFieldsToMove.add(currentField);
+//            }
+//        }
+//    }
 
     protected boolean checksFieldsForTaken(Field field){
         if (!field.isTaken()){
@@ -125,16 +147,12 @@ public abstract class Figure implements Observer {
         return false;
     }
 
-    public void iamKilled(){
-        //TODO
-    }
-
     @Override
     public boolean equals(Object o){
         if (this.getClass() != o.getClass()){
             return false;
         }
-        return this.field.getX() == ((Figure)o).getField().getX() && this.getField().getY() == ((Figure)o).getField().getY()
+        return this.field.equals(((Figure)o).getField())
                 && this.getColor() == ((Figure)o).getColor();
     }
 
@@ -145,28 +163,23 @@ public abstract class Figure implements Observer {
 
     @Override
     public String toString(){
-        if (this.getClass() == Pawn.class){
+        if (this.getClass() == Pawn.class) {
             return "" + this.getField();
-        }else {
-            if (this.getClass() == Rock.class) {
-                return "R" + this.getField();
-            } else {
-                if (this.getClass() == Knight.class) {
-                    return "N" + this.getField();
-                } else {
-                    if (this.getClass() == Bishop.class) {
-                        return "B" + this.getField();
-                    } else {
-                        if (this.getClass() == Queen.class) {
-                            return "Q" + this.getField();
-                        } else {
-                            if (this.getClass() == King.class) {
-                                return "K" + this.getField();
-                            }
-                        }
-                    }
-                }
-            }
+        }
+        if (this.getClass() == Rock.class) {
+            return "R" + this.getField();
+        }
+        if (this.getClass() == Knight.class) {
+            return "N" + this.getField();
+        }
+        if (this.getClass() == Bishop.class) {
+            return "B" + this.getField();
+        }
+        if (this.getClass() == Queen.class) {
+            return "Q" + this.getField();
+        }
+        if (this.getClass() == King.class) {
+            return "K" + this.getField();
         }
         return null;
     }

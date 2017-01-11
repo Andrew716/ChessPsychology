@@ -67,6 +67,7 @@ public class Parser {
         if (turn.contains("B")){
             if (turn.contains("x")){
                 Board.getInstance().setCoordinates(field, fetchFigure(Bishop.class, isWhite, true));
+                Main.printFigures();
             }else {
                 Board.getInstance().setCoordinates(field, fetchFigure(Bishop.class, isWhite, false));
             }
@@ -98,10 +99,11 @@ public class Parser {
 
     private static Figure fetchFigure(Class clazz, boolean isWhite, boolean isKilling){
         Field fieldUnderAttack = null;
-        boolean flag = false;
+        Figure figureIsUnderAttack = null;
+        List<Observer> whoAttacks = new ArrayList<Observer>();
         Iterator<Observer> iterator;
         if (isWhite){
-            iterator = Board.getWhiteFigures().iterator();
+            iterator = Board.getInstance().getWhiteFigures().iterator();
         }else {
             iterator = Board.getBlackFigures().iterator();
         }
@@ -112,11 +114,10 @@ public class Parser {
                     Iterator<Figure> couldBeKilled = ((Figure)currentFigure).getWhoCouldBeKilled().iterator();
                     while (couldBeKilled.hasNext()){
                         Figure figureUnderAttack = couldBeKilled.next();
-                        Field couldBeUnderAttack = figureUnderAttack.getField();
-                        if (couldBeUnderAttack.equals(field)){
-                            flag = true;
-                            fieldUnderAttack = couldBeUnderAttack;
-                            candidates.add(currentFigure);
+//                        Field couldBeUnderAttack = figureUnderAttack.getField();
+                        if (figureUnderAttack.getField().equals(field)){
+                            whoAttacks.add(currentFigure);
+                            figureIsUnderAttack = figureUnderAttack;
                         }
                     }
                 }else {
@@ -130,14 +131,50 @@ public class Parser {
                 }
             }
         }
-        if (flag){
-            field.removeFigureByField(isWhite);
+        if (figureIsUnderAttack != null) {
+            Board.getInstance().removeFigure(figureIsUnderAttack);
+        }
+        if (!whoAttacks.isEmpty()){
+            if (whoAttacks.size() == 1){
+                return (Figure)whoAttacks.get(0);
+            }else{
+                return choseFigureWhichAttack(whoAttacks, clazz);
+            }
         }
         if (candidates.size() > 1){
             return choseProperFigure();
         }else {
             return (Figure) candidates.get(0);
         }
+    }
+
+    private static Figure choseFigureWhichAttack(List list, Class clazz){
+        if (clazz == Pawn.class){
+            char verticalPawn = mainTurn.charAt(0);
+            int integer = Character.getNumericValue(verticalPawn);
+            for (Object currentFigure : list){
+                if (((Figure) currentFigure).getField().getY() == Field.getInvertedHorizontal().get(verticalPawn)){
+                    return (Figure) currentFigure;
+                }
+            }
+        }else {
+            char secondPosition = mainTurn.charAt(1);
+            int integer = Character.getNumericValue(secondPosition);
+            if (integer > Board.SIZE){
+                for (Object figure : list){
+                    if (((Figure) figure).getField().getY() == Field.getInvertedHorizontal().get(secondPosition)){
+                        return (Figure) figure;
+                    }
+                }
+            }else {
+                for (Object figure : list){
+                    if (((Figure) figure).getField().getX() == Field.getInvertedVertical().get(integer)){
+                        return (Figure) figure;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private static Figure choseProperFigure(){

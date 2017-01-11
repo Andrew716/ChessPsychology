@@ -11,6 +11,11 @@ public class Game {
 
     private Set<StringBuilder> possibleTurnsAndKillings = new LinkedHashSet<StringBuilder>();
 
+
+    public Set<StringBuilder> getPossibleTurnsAndKillings() {
+        return possibleTurnsAndKillings;
+    }
+
     public void setPossibleTurnsAndKillings(Color color){
         possibleTurnsAndKillings.clear();
         King king = null;
@@ -23,15 +28,21 @@ public class Game {
             }
         }
         if (king.isUnderAttack()){
+            if (king.getPossibleFieldsToMove().isEmpty()){
+                for (Figure enemy : king.getWhoCouldBeKilled()){
+                    if (enemy.getNumberOfAliensProtectMe() >= 1){
+                        System.out.println("Mat");
+                        return;
+                    }
+                }
+            }
             StringBuilder turn = new StringBuilder(king.toString());
             for (Object field : king.getPossibleFieldsToMove()){
-                turn.append(king.getField().toString());
-                turn.append("$").append(field.toString());
+                turn.append("-").append(field.toString());
                 possibleTurnsAndKillings.add(turn);
             }
-            for (Object field : king.getPossibleFieldsToMove()){
-                turn.append(king.getField().toString());
-                turn.append("@").append(field.toString());
+            for (Object figure : king.getWhoCouldBeKilled()){
+                turn.append("x").append(((Figure)figure).getField());
                 possibleTurnsAndKillings.add(turn);
             }
             return;
@@ -40,21 +51,19 @@ public class Game {
             if (color == Color.BLACK){
                 figures = Board.getBlackFigures();
             }else {
-                figures = Board.getWhiteFigures();
+                figures = Board.getInstance().getWhiteFigures();
             }
             StringBuilder turn;
             for (Object figure : figures){
-                Set<Turn> turns = new LinkedHashSet<Turn>();
+//                Set<Turn> turns = new LinkedHashSet<Turn>();
                 for (Object field : ((Figure)figure).getPossibleFieldsToMove()){
                     turn = new StringBuilder(figure.toString());
-                    turn.append(((Figure) figure).getField().toString());
-                    turn.append("$").append(field.toString());
+                    turn.append("-").append(field.toString());
                     possibleTurnsAndKillings.add(turn);
                 }
-                for (Object attackField : ((Figure) figure).getAttackedFields()){
+                for (Object attackedFigure : ((Figure) figure).getWhoCouldBeKilled()){
                     turn = new StringBuilder(figure.toString());
-                    turn.append(((Figure) figure).getField().toString());
-                    turn.append("@").append(attackField.toString());
+                    turn.append("x").append(((Figure)attackedFigure).getField().toString());
                     possibleTurnsAndKillings.add(turn);
                 }
             }
@@ -78,7 +87,7 @@ public class Game {
             figures = Board.getBlackFigures();
             isBlack = true;
         }else {
-            figures = Board.getWhiteFigures();
+            figures = Board.getInstance().getWhiteFigures();
             isBlack = false;
         }
         for (Object figure : figures){
@@ -111,29 +120,29 @@ public class Game {
     private void turnsIfReachedEndLine(Pawn pawn, Field aimedField, boolean isKilling, List<StringBuilder> storage){
         if (isKilling){
             StringBuilder turn1 = new StringBuilder(pawn.getField().toString());
-            turn1.append("@").append(aimedField.toString()).append("(").append("Q").append(")");
+            turn1.append("-").append(aimedField.toString()).append("(").append("Q").append(")");
             storage.add(turn1);
             StringBuilder turn2 = new StringBuilder(pawn.getField().toString());
-            turn2.append("@").append(aimedField.toString()).append("(").append("R").append(")");
+            turn2.append("-").append(aimedField.toString()).append("(").append("R").append(")");
             storage.add(turn2);
             StringBuilder turn3 = new StringBuilder(pawn.getField().toString());
-            turn3.append("@").append(aimedField.toString()).append("(").append("K").append(")");
+            turn3.append("-").append(aimedField.toString()).append("(").append("K").append(")");
             storage.add(turn3);
             StringBuilder turn4 = new StringBuilder(pawn.getField().toString());
-            turn4.append("@").append(aimedField.toString()).append("(").append("B").append(")");
+            turn4.append("-").append(aimedField.toString()).append("(").append("B").append(")");
             storage.add(turn4);
         }else {
             StringBuilder turn1 = new StringBuilder(pawn.getField().toString());
-            turn1.append("$").append(aimedField.toString()).append("(").append("Q").append(")");
+            turn1.append("x").append(aimedField.toString()).append("(").append("Q").append(")");
             storage.add(turn1);
             StringBuilder turn2 = new StringBuilder(pawn.getField().toString());
-            turn2.append("$").append(aimedField.toString()).append("(").append("R").append(")");
+            turn2.append("x").append(aimedField.toString()).append("(").append("R").append(")");
             storage.add(turn2);
             StringBuilder turn3 = new StringBuilder(pawn.getField().toString());
-            turn3.append("$").append(aimedField.toString()).append("(").append("K").append(")");
+            turn3.append("x").append(aimedField.toString()).append("(").append("K").append(")");
             storage.add(turn3);
             StringBuilder turn4 = new StringBuilder(pawn.getField().toString());
-            turn4.append("$").append(aimedField.toString()).append("(").append("B").append(")");
+            turn4.append("x").append(aimedField.toString()).append("(").append("B").append(")");
             storage.add(turn4);
         }
     }
@@ -145,22 +154,25 @@ public class Game {
         if (color == Color.BLACK){
             figures = Board.getBlackFigures();
         }else {
-            figures = Board.getWhiteFigures();
+            figures = Board.getInstance().getWhiteFigures();
         }
         for (Object figure : figures){
             if (figure.getClass() == King.class){
                 if (((King) figure).getColor() == Color.WHITE){
                     King king = (King) figure;
-                    if (!king.isUnderAttack() && king.isOportunityToCastling()){
+                    if (!king.isUnderAttack() && king.isOpportunityToCastling()){
                         for (Figure rock : rocks){
                             if (rock.getColor() == Color.WHITE){
-                                if (rock.getField().equals(new Field(7, 0)) && ((Rock) rock).isOportunityToCastling()){
-                                    if (!new Field(7, 1).isUnderInfluence(Color.BLACK) && !new Field(7, 2).isUnderInfluence(Color.BLACK) && !new Field(7, 3).isUnderInfluence(Color.BLACK)){
+                                if (rock.getField().equals(new Field(7, 0)) && ((Rock) rock).isOpportunityToCastling()){
+                                    if (!new Field(7, 1).isUnderInfluence(Color.BLACK) && !new Field(7, 2).isUnderInfluence(Color.BLACK) &&
+                                            !new Field(7, 3).isUnderInfluence(Color.BLACK) && !new Field(7, 1).isTaken() && !new Field(7, 2).isTaken() &&
+                                            !new Field(7, 3).isTaken()){
                                         list.add("0-0-0");
                                     }
                                 }
-                                if (rock.getField().equals(new Field(7, 7)) && ((Rock) rock).isOportunityToCastling()){
-                                    if (!new Field(7, 6).isUnderInfluence(Color.BLACK) && !new Field(7, 5).isUnderInfluence(Color.BLACK)){
+                                if (rock.getField().equals(new Field(7, 7)) && ((Rock) rock).isOpportunityToCastling()){
+                                    if (!new Field(7, 6).isUnderInfluence(Color.BLACK) && !new Field(7, 5).isUnderInfluence(Color.BLACK) &&
+                                            !new Field(7, 6).isTaken() && !new Field(7, 5).isTaken()){
                                         list.add("0-0");
                                     }
                                 }
@@ -170,16 +182,19 @@ public class Game {
                     return list;
                 }else {
                     King king = (King) figure;
-                    if (!king.isUnderAttack() && king.isOportunityToCastling()){
+                    if (!king.isUnderAttack() && king.isOpportunityToCastling()){
                         for (Figure rock : rocks){
                             if (rock.getColor() == Color.BLACK){
-                                if (rock.getField().equals(new Field(0, 0)) && ((Rock) rock).isOportunityToCastling()){
-                                    if (!new Field(0, 1).isUnderInfluence(Color.WHITE) && !new Field(0, 2).isUnderInfluence(Color.WHITE) && !new Field(0, 3).isUnderInfluence(Color.WHITE)){
+                                if (rock.getField().equals(new Field(0, 0)) && ((Rock) rock).isOpportunityToCastling()){
+                                    if (!new Field(0, 1).isUnderInfluence(Color.WHITE) && !new Field(0, 2).isUnderInfluence(Color.WHITE) &&
+                                            !new Field(0, 3).isUnderInfluence(Color.WHITE) && !new Field(0, 1).isTaken() && !new Field(0, 2).isTaken() &&
+                                            !new Field(0, 3).isTaken()){
                                         list.add("0-0-0");
                                     }
                                 }
-                                if (rock.getField().equals(new Field(0, 7)) && ((Rock) rock).isOportunityToCastling()){
-                                    if (!new Field(0, 6).isUnderInfluence(Color.WHITE) && !new Field(0, 5).isUnderInfluence(Color.WHITE)){
+                                if (rock.getField().equals(new Field(0, 7)) && ((Rock) rock).isOpportunityToCastling()){
+                                    if (!new Field(0, 6).isUnderInfluence(Color.WHITE) && !new Field(0, 5).isUnderInfluence(Color.WHITE) &&
+                                            !new Field(0, 6).isTaken() && !new Field(0, 5).isTaken()){
                                         list.add("0-0");
                                     }
                                 }

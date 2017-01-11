@@ -20,24 +20,32 @@ public class Queen extends Figure {
             Field field = new Field(i, this.getField().getY());
             if (checksFieldsForTaken(field)){
                 break;
+            }else {
+                this.getFieldsUnderMyInfluence().add(field);
             }
         }
         for (int i = this.getField().getX() - 1; i >= 0; i--){
             Field field = new Field(i, this.getField().getY());
             if (checksFieldsForTaken(field)){
                 break;
+            }else {
+                this.getFieldsUnderMyInfluence().add(field);
             }
         }
         for (int j = this.getField().getY() + 1; j < Board.SIZE; j++){
             Field field = new Field(this.getField().getX(), j);
             if (checksFieldsForTaken(field)){
                 break;
+            }else {
+                this.getFieldsUnderMyInfluence().add(field);
             }
         }
         for (int j = this.getField().getY() - 1; j >= 0; j--){
             Field field = new Field(this.getField().getX(), j);
             if (checksFieldsForTaken(field)){
                 break;
+            }else {
+                this.getFieldsUnderMyInfluence().add(field);
             }
         }
         for (int i = this.getField().getX() + 1; i < Board.SIZE; i++){
@@ -48,6 +56,8 @@ public class Queen extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }
@@ -63,6 +73,8 @@ public class Queen extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }
@@ -78,6 +90,8 @@ public class Queen extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }
@@ -93,6 +107,8 @@ public class Queen extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }

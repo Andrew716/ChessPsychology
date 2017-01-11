@@ -46,6 +46,8 @@ public class Bishop extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }
@@ -61,6 +63,8 @@ public class Bishop extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }
@@ -76,6 +80,8 @@ public class Bishop extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }
@@ -91,6 +97,8 @@ public class Bishop extends Figure {
                     if (checksFieldsForTaken(field)){
                         flag = true;
                         break;
+                    }else {
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }

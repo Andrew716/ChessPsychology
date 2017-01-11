@@ -10,7 +10,7 @@ import static java.lang.Math.abs;
  */
 public class King extends Figure {
 
-    private boolean oportunityToCastling = true;
+    private boolean opportunityToCastling = true;
 
 //    public final static int KING_WEIGHT = Integer.MAX_VALUE;
 
@@ -19,28 +19,39 @@ public class King extends Figure {
         attackedFields();
     }
 
-//TODO must be changed method for field
+//TODO fix bug comparing possible fields for king if some fields are under attack
 
-//    @Override
-//    protected void possibleTurns() {
-//        Iterator<Field> iterator = attackedFields.iterator();
-//        while (iterator.hasNext()){
-//            Field currentField = iterator.next();
-//            if (Field.isTaken(currentField)){
-//                if (this.getColor() == Field.getFigureByField(currentField).getColor()){
-//                    Field.getFigureByField(currentField).addAlien(this);
-//                }else {
-//                    Field.getFigureByField(currentField).addEnemy(this);
-//                }
-//            }else {
-//                possibleFieldsToMove.add(currentField);
-//            }
-//        }
-//    }
+    public void possibleTurns(){
+        Set set;
+        for (Object currentField : this.getAttackedFields()){
+            if (this.getColor() == Color.BLACK){
+                set = Board.getFieldsUnderWhiteInfluence();
+            }else {
+                set = Board.getFieldsUnderBlackInfluence();
+            }
+            if (!set.contains(currentField)){
+                if (((Field)currentField).isTaken()){
+                    if (this.getColor() == ((Field)currentField).getFigureByField().getColor()){
+                        ((Field)currentField).getFigureByField().addAlien(this);
+                    }else {
+                        ((Field)currentField).getFigureByField().addEnemy(this);
+                        this.getWhoCouldBeKilled().add(((Field)currentField).getFigureByField());
+                    }
+                }else {
+                    this.getPossibleFieldsToMove().add(currentField);
+                    this.getFieldsUnderMyInfluence().add((Field)currentField);
+                }
+            }
+        }
+    }
 
 
-    public boolean isOportunityToCastling() {
-        return oportunityToCastling;
+    public boolean isOpportunityToCastling() {
+        return opportunityToCastling;
+    }
+
+    public void setOpportunityToCastling(boolean opportunityToCastling) {
+        this.opportunityToCastling = opportunityToCastling;
     }
 
     public boolean isUnderAttack(){
@@ -48,7 +59,7 @@ public class King extends Figure {
         if (this.getColor() == Color.WHITE){
             set = Board.getBlackFigures();
         }else {
-            set = Board.getWhiteFigures();
+            set = Board.getInstance().getWhiteFigures();
         }
         Iterator iterator = set.iterator();
         while (iterator.hasNext()){
@@ -84,7 +95,8 @@ public class King extends Figure {
                     if (this.getField().getX() == i && this.getField().getY() == j){
                         continue;
                     }
-                    this.getAttackedFields().add(new Field(i, j));
+                    Field field = new Field(i, j);
+                    this.getAttackedFields().add(field);
                 }
             }
         }

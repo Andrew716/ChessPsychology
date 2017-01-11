@@ -70,19 +70,30 @@ public class Pawn extends Figure {
         for (int i = 1; i < Board.SIZE - 1; i++){
             if (this.getColor() == Color.WHITE){
                 if (this.getField().getX() - i == 1){
-                    if (this.getField().getY() + 1 <Board.SIZE){
-                        this.getAttackedFields().add(new Field(i, this.getField().getY() + 1));
+                    if (this.getField().getY() + 1 < Board.SIZE){
+                        Field field = new Field(i, this.getField().getY() + 1);
+                        this.getAttackedFields().add(field);
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                     if (this.getField().getY() - 1 >= 0){
-                        this.getAttackedFields().add(new Field(i, this.getField().getY() - 1));
+                        Field field = new Field(i, this.getField().getY() - 1);
+                        this.getAttackedFields().add(field);
+                        this.getFieldsUnderMyInfluence().add(field);
                     }
                 }
             }else {
                 if (i - this.getField().getX() == 1){
-                    this.getAttackedFields().add(new Field(i, this.getField().getY() - 1));
-                    this.getAttackedFields().add(new Field(i, this.getField().getY() + 1));
+                    if (this.getField().getY() - 1 >= 0){
+                        Field field = new Field(i, this.getField().getY() - 1);
+                        this.getAttackedFields().add(field);
+                        this.getFieldsUnderMyInfluence().add(field);
+                    }
+                    if (this.getField().getY() + 1 < Board.SIZE){
+                        Field field = new Field(i, this.getField().getY() + 1);
+                        this.getAttackedFields().add(field);
+                        this.getFieldsUnderMyInfluence().add(field);
+                    }
                 }
-
             }
         }
         enPassant();

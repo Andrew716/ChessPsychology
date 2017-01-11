@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Iterator;
+
 import static java.lang.Math.abs;
 
 /**
@@ -14,22 +16,23 @@ public class Knight extends Figure {
         attackedFields();
     }
 
-//    @Override
-//    public void possibleTurns() {
-//        Iterator<Field> iterator = attackedFields.iterator();
-//        while (iterator.hasNext()){
-//            Field currentField = iterator.next();
-//            if (Field.isTaken(currentField)){
-//                if (this.getColor() == Field.getFigureByField(currentField).getColor()){
-//                    Field.getFigureByField(currentField).addAlien(this);
-//                }else {
-//                    Field.getFigureByField(currentField).addEnemy(this);
-//                }
-//            }else {
-//                possibleFieldsToMove.add(currentField);
-//            }
-//        }
-//    }
+    public void possibleTurns(){
+        Iterator<Field> iterator = this.getAttackedFields().iterator();
+        while (iterator.hasNext()){
+            Field currentField = iterator.next();
+            if (currentField.isTaken()){
+                if (this.getColor() == currentField.getFigureByField().getColor()){
+                    currentField.getFigureByField().addAlien(this);
+                }else {
+                    currentField.getFigureByField().addEnemy(this);
+                    this.getWhoCouldBeKilled().add(currentField.getFigureByField());
+                }
+            }else {
+                this.getPossibleFieldsToMove().add(currentField);
+                this.getFieldsUnderMyInfluence().add(currentField);
+            }
+        }
+    }
 
     @Override
     protected void attackedFields() {
@@ -39,7 +42,8 @@ public class Knight extends Figure {
                     if (this.getField().getX()== i || this.getField().getY() == j){
                         continue;
                     }
-                    this.getAttackedFields().add(new Field(i, j));
+                    Field field = new Field(i, j);
+                    this.getAttackedFields().add(field);
                 }
             }
         }

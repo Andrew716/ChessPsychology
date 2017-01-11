@@ -1,9 +1,6 @@
 package model;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by phoenix on 21.12.16.
@@ -115,7 +112,7 @@ public class Field {
         if (color == Color.BLACK){
             figures = Board.getBlackFigures();
         }else {
-            figures = Board.getWhiteFigures();
+            figures = Board.getInstance().getWhiteFigures();
         }
         for (Object figure : figures){
             for (Object field : ((Figure)figure).getAttackedFields()){
@@ -127,6 +124,23 @@ public class Field {
         return false;
     }
 
+//    public Set fieldsAreUnderInfluence(Color color){
+//        Set  figures = new LinkedHashSet();
+//        if (color == Color.BLACK){
+//            figures = Board.getBlackFigures();
+//        }else {
+//            figures = Board.getInstance().getWhiteFigures();
+//        }
+//        for (Object figure : figures){
+//            for (Object field : ((Figure)figure).getAttackedFields()){
+//                if (this.equals(field)){
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+
     public Figure getFigureByField(){
         Iterator<Figure> iterator = Board.getFigures().iterator();
         while (iterator.hasNext()){
@@ -136,16 +150,6 @@ public class Field {
             }
         }
         return null;
-    }
-
-    public void removeFigureByField(boolean isWhite){
-        Board.getFigures().remove(this.getFigureByField());
-        if (isWhite){
-            Board.getWhiteFigures().remove(this.getFigureByField());
-        }else {
-            Board.getBlackFigures().remove(this.getFigureByField());
-        }
-
     }
 
     @Override
