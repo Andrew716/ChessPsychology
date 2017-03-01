@@ -21,12 +21,28 @@ public class Main {
     private final static String PATH_TO_FILE = "src/main/resources/childsMat";
     private static List<String> whiteTurns = new ArrayList<String>();
     private static List<String> blackTurns = new ArrayList<String>();
+    static boolean run = true;
+
 
     public static void main(String[] args) throws InterruptedException{
-        Board board = Board.getInstance();
-       printAllPossibleTurns();
-        printFigures();
-        printFile();
+//        Board board = Board.getInstance();
+//       printAllPossibleTurns();
+//        printFigures();
+//        printFile();
+//
+
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+
+                while(run);
+                run = true;
+            }
+
+        });
+
+        thread.start();
+        run = false;
 
 //        System.out.println("White figures");
 //        Iterator figureIterator = Board.getFigures().iterator();

@@ -8,12 +8,13 @@ import java.util.*;
 public class Board implements Subject{
 
     public final static byte SIZE = 8;
-    private static Set<Observer> figures = new LinkedHashSet();
+    private static Set<Observer> figures = new LinkedHashSet<Observer>();
     private static Set<Observer> whiteFigures = new LinkedHashSet<Observer>();
     private static Set<Observer> blackFigures = new LinkedHashSet<Observer>();
     private static Set<Field> fieldsUnderWhiteInfluence = new LinkedHashSet<Field>();
     private static Set<Field> fieldsUnderBlackInfluence = new LinkedHashSet<Field>();
-    public final static Set<Field> listOfFields = new LinkedHashSet();
+    private static List<Turn> possibleTurnsAndKillings = new ArrayList<Turn>();
+    public final static Set<Field> listOfFields = new LinkedHashSet<Field>();
     private Field field;
     private Field previousTurn;
     private volatile static Board uniqueInstance;
@@ -93,15 +94,23 @@ public class Board implements Subject{
                 listOfFields.add(new Field(i,j));
             }
         }
-        Iterator<Figure> iterator = Board.getFigures().iterator();
-        while (iterator.hasNext()){
-            Figure currentFigure = iterator.next();
-            if (currentFigure.getColor() == Color.WHITE){
+        for(Observer currentFigure : figures){
+            if (((Figure)currentFigure).getColor() == Color.WHITE){
                 whiteFigures.add(currentFigure);
             }else {
                 blackFigures.add(currentFigure);
             }
-            currentFigure.possibleTurns();
+            ((Figure)currentFigure).possibleTurns();
+        }
+        for (Observer whiteFigure : whiteFigures){
+            for (Field field : ((Figure) whiteFigure).getFieldsUnderMyInfluence()){
+                fieldsUnderWhiteInfluence.add(field);
+            }
+        }
+        for (Observer blackFigure : blackFigures){
+            for (Field field : ((Figure) blackFigure).getFieldsUnderMyInfluence()){
+                fieldsUnderBlackInfluence.add(field);
+            }
         }
     }
 
@@ -130,15 +139,19 @@ public class Board implements Subject{
         this.previousTurn = previousTurn;
     }
 
-    public /*static*/ Set<Observer> getWhiteFigures() {
+    public static Set<Observer> getWhiteFigures() {
         return whiteFigures;
+    }
+
+    public static List<Turn> getPossibleTurnsAndKillings() {
+        return possibleTurnsAndKillings;
     }
 
     public static Set<Observer> getBlackFigures() {
         return blackFigures;
     }
 
-    public static Set getFigures() {
+    public static Set<Observer> getFigures() {
         return figures;
     }
 
@@ -172,22 +185,15 @@ public class Board implements Subject{
     }
 
     public void removeFigure(Observer figure) {
-        System.out.println("figure = " + figure.getClass());
-        System.out.println("figure = " + figure + ((Figure)figure).getColor());
-        System.out.println(((Figure) figure).getField());
-        System.out.println(((Figure) figure).getField().getFigureByField());
         Iterator<Observer> iterator = figures.iterator();
         List<Figure> list = new ArrayList<Figure>();
         while (iterator.hasNext()){
             Figure currentFigure = (Figure) iterator.next();
             list.add(currentFigure);
         }
-
         figures.clear();
         whiteFigures.clear();
         blackFigures.clear();
-        System.out.println("list ====    "  + list.size());
-        list.remove(figure);
         for (Figure currentFigure : list){
             figures.add(currentFigure);
             if (currentFigure.getColor() == Color.BLACK){
@@ -196,14 +202,6 @@ public class Board implements Subject{
                 whiteFigures.add(currentFigure);
             }
         }
-//        if (((Figure)figure).getColor() == Color.BLACK){
-//            blackFigures.remove(figure);
-//        }else {
-//            whiteFigures.remove(figure);
-//        }
-        System.out.println("Number of Figures = " + figures.size());
-        System.out.println("Number of White Figures = " + whiteFigures.size());
-        System.out.println("Number of Black Figures = " + blackFigures.size());
     }
 
     public void setCoordinates(Field field, Observer figure){

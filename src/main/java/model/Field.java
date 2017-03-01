@@ -66,10 +66,7 @@ public class Field {
         if (x>=0 && x<Board.SIZE && y>=0 && y<Board.SIZE){
             this.x = x;
             this.y = y;
-        }else {
-//            throw new IndexOutOfBoundsException("Field is out of the board");
         }
-
     }
 
     public int getX() {
@@ -97,10 +94,8 @@ public class Field {
     }
 
     public boolean isTaken(){
-        Iterator<Figure> iterator = Board.getFigures().iterator();
-        while (iterator.hasNext()){
-            Figure figure = iterator.next();
-            if (figure.getField().getX() == this.getX() && figure.getField().getY() == this.getY()){
+        for(Observer figure : Board.getFigures()){
+            if(((Figure)figure).getField().getX() == this.getX() && ((Figure) figure).getField().getY() == this.getY()){
                 return true;
             }
         }
@@ -142,11 +137,9 @@ public class Field {
 //    }
 
     public Figure getFigureByField(){
-        Iterator<Figure> iterator = Board.getFigures().iterator();
-        while (iterator.hasNext()){
-            Figure figure = iterator.next();
-            if (figure.getField().getX() == this.getX() && figure.getField().getY() == this.getY()){
-                return figure;
+        for(Observer figure : Board.getFigures()){
+            if(((Figure)figure).getField().getX() == this.getX() && ((Figure) figure).getField().getY() == this.getY()){
+                return (Figure) figure;
             }
         }
         return null;

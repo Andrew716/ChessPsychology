@@ -21,6 +21,8 @@ public abstract class Figure implements Observer {
     protected abstract void attackedFields();
     public abstract void possibleTurns();
 
+    public Figure(){}
+
     public Figure(Field field, Color color) {
         this.field = field;
         this.color = color;
@@ -42,6 +44,7 @@ public abstract class Figure implements Observer {
         this.whoCouldBeKilled.clear();
         this.attackedFields.clear();
         this.possibleFieldsToMove.clear();
+        this.fieldsUnderMyInfluence.clear();
         if (this.getClass() == King.class){
             ((King) this).setOpportunityToCastling(false);
         }else {
@@ -59,6 +62,7 @@ public abstract class Figure implements Observer {
         this.whoCouldBeKilled.clear();
         this.attackedFields.clear();
         this.possibleFieldsToMove.clear();
+        this.fieldsUnderMyInfluence.clear();
         attackedFields();
         possibleTurns();
     }
@@ -75,7 +79,7 @@ public abstract class Figure implements Observer {
         return whoCouldBeKilled;
     }
 
-    public Set getAttackedFields() {
+    public Set<Field> getAttackedFields() {
         return attackedFields;
     }
 
@@ -104,7 +108,7 @@ public abstract class Figure implements Observer {
         return numberOfEnemiesAttackMe;
     }
 
-    public Set getPossibleFieldsToMove() {
+    public Set<Field> getPossibleFieldsToMove() {
         return possibleFieldsToMove;
     }
 

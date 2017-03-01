@@ -38,7 +38,7 @@ public class King extends Figure {
                         this.getWhoCouldBeKilled().add(((Field)currentField).getFigureByField());
                     }
                 }else {
-                    this.getPossibleFieldsToMove().add(currentField);
+                    this.getPossibleFieldsToMove().add((Field) currentField);
                     this.getFieldsUnderMyInfluence().add((Field)currentField);
                 }
             }
@@ -61,25 +61,17 @@ public class King extends Figure {
         }else {
             set = Board.getInstance().getWhiteFigures();
         }
-        Iterator iterator = set.iterator();
-        while (iterator.hasNext()){
-            Figure figure = (Figure) iterator.next();
-            if (figure.getClass() == Knight.class){
-                Iterator possibleTurns = (figure).getPossibleFieldsToMove().iterator();
-                while (possibleTurns.hasNext()){
-                    Field currentField = (Field) possibleTurns.next();
-                    if (this.getField().equals(currentField)){
+        for (Object figure : set){
+            if(figure.getClass() == Knight.class){
+                for (Field currentField : ((Figure)figure).getPossibleFieldsToMove()){
+                    if(this.getField().equals(currentField)){
                         return true;
                     }
                 }
-            }else {
-                if (figure.getClass() != King.class){
-                    Iterator fieldsUnderAttack = figure.getAttackedFields().iterator();
-                    while (fieldsUnderAttack.hasNext()){
-                        Field currentField = (Field) fieldsUnderAttack.next();
-                        if (this.getField().equals(currentField)){
-                            return true;
-                        }
+            }else{
+                for (Field currentField : ((Figure)figure).getAttackedFields()){
+                    if (this.getField().equals(currentField)){
+                        return true;
                     }
                 }
             }

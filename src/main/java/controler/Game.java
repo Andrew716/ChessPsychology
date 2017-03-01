@@ -31,6 +31,7 @@ public class Game {
             if (king.getPossibleFieldsToMove().isEmpty()){
                 for (Figure enemy : king.getWhoCouldBeKilled()){
                     if (enemy.getNumberOfAliensProtectMe() >= 1){
+                        //TODO other alien figures could protect me
                         System.out.println("Mat");
                         return;
                     }
@@ -45,13 +46,12 @@ public class Game {
                 turn.append("x").append(((Figure)figure).getField());
                 possibleTurnsAndKillings.add(turn);
             }
-            return;
         }else {
             Set figures;
             if (color == Color.BLACK){
                 figures = Board.getBlackFigures();
             }else {
-                figures = Board.getInstance().getWhiteFigures();
+                figures = Board.getWhiteFigures();
             }
             StringBuilder turn;
             for (Object figure : figures){
@@ -87,7 +87,7 @@ public class Game {
             figures = Board.getBlackFigures();
             isBlack = true;
         }else {
-            figures = Board.getInstance().getWhiteFigures();
+            figures = Board.getWhiteFigures();
             isBlack = false;
         }
         for (Object figure : figures){
@@ -154,7 +154,7 @@ public class Game {
         if (color == Color.BLACK){
             figures = Board.getBlackFigures();
         }else {
-            figures = Board.getInstance().getWhiteFigures();
+            figures = Board.getWhiteFigures();
         }
         for (Object figure : figures){
             if (figure.getClass() == King.class){
