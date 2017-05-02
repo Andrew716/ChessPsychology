@@ -12,8 +12,6 @@ public class King extends Figure {
 
     private boolean opportunityToCastling = true;
 
-//    public final static int KING_WEIGHT = Integer.MAX_VALUE;
-
     public King(Field field, Color color) {
         super(field, color);
         attackedFields();
@@ -23,11 +21,12 @@ public class King extends Figure {
 
     public void possibleTurns(){
         Set set;
+        Board board = Board.getInstance();
         for (Object currentField : this.getAttackedFields()){
             if (this.getColor() == Color.BLACK){
-                set = Board.getFieldsUnderWhiteInfluence();
+                set = board.getFieldsUnderWhiteInfluence();
             }else {
-                set = Board.getFieldsUnderBlackInfluence();
+                set = board.getFieldsUnderBlackInfluence();
             }
             if (!set.contains(currentField)){
                 if (((Field)currentField).isTaken()){
@@ -56,10 +55,11 @@ public class King extends Figure {
 
     public boolean isUnderAttack(){
         Set set;
+        Board board = Board.getInstance();
         if (this.getColor() == Color.WHITE){
-            set = Board.getBlackFigures();
+            set = board.getBlackFigures();
         }else {
-            set = Board.getInstance().getWhiteFigures();
+            set = board.getWhiteFigures();
         }
         for (Object figure : set){
             if(figure.getClass() == Knight.class){

@@ -66,6 +66,8 @@ public class Field {
         if (x>=0 && x<Board.SIZE && y>=0 && y<Board.SIZE){
             this.x = x;
             this.y = y;
+        } else {
+            throw new IllegalArgumentException("x = " + x + " y = " + y);
         }
     }
 
@@ -94,7 +96,8 @@ public class Field {
     }
 
     public boolean isTaken(){
-        for(Observer figure : Board.getFigures()){
+        Board board = Board.getInstance();
+        for(Observer figure : board.getFigures()){
             if(((Figure)figure).getField().getX() == this.getX() && ((Figure) figure).getField().getY() == this.getY()){
                 return true;
             }
@@ -102,10 +105,11 @@ public class Field {
         return false;
     }
 
+    //TODO refactor this method. Should be placed in Board class.
     public boolean isUnderInfluence(Color color){
         Set  figures;
         if (color == Color.BLACK){
-            figures = Board.getBlackFigures();
+            figures = Board.getInstance().getBlackFigures();
         }else {
             figures = Board.getInstance().getWhiteFigures();
         }
@@ -119,6 +123,7 @@ public class Field {
         return false;
     }
 
+    //TODO Should be placed in Board class.
 //    public Set fieldsAreUnderInfluence(Color color){
 //        Set  figures = new LinkedHashSet();
 //        if (color == Color.BLACK){
@@ -136,8 +141,9 @@ public class Field {
 //        return false;
 //    }
 
+    //TODO refactor this method. Should be placed in Board class.
     public Figure getFigureByField(){
-        for(Observer figure : Board.getFigures()){
+        for(Observer figure : Board.getInstance().getFigures()){
             if(((Figure)figure).getField().getX() == this.getX() && ((Figure) figure).getField().getY() == this.getY()){
                 return (Figure) figure;
             }

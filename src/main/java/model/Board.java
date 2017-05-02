@@ -8,20 +8,20 @@ import java.util.*;
 public class Board implements Subject{
 
     public final static byte SIZE = 8;
-    private static Set<Observer> figures = new LinkedHashSet<Observer>();
-    private static Set<Observer> whiteFigures = new LinkedHashSet<Observer>();
-    private static Set<Observer> blackFigures = new LinkedHashSet<Observer>();
-    private static Set<Field> fieldsUnderWhiteInfluence = new LinkedHashSet<Field>();
-    private static Set<Field> fieldsUnderBlackInfluence = new LinkedHashSet<Field>();
-    private static List<Turn> possibleTurnsAndKillings = new ArrayList<Turn>();
-    public final static Set<Field> listOfFields = new LinkedHashSet<Field>();
+    private Set<Observer> figures = new LinkedHashSet<Observer>();
+    private Set<Observer> whiteFigures = new LinkedHashSet<Observer>();
+    private Set<Observer> blackFigures = new LinkedHashSet<Observer>();
+    private Set<Field> fieldsUnderWhiteInfluence = new LinkedHashSet<Field>();
+    private Set<Field> fieldsUnderBlackInfluence = new LinkedHashSet<Field>();
+    private List<Turn> possibleTurnsAndKillings = new ArrayList<Turn>();
+    //TODO maybe could be deleted
+//    private final static Set<Field> listOfFields = new LinkedHashSet<Field>();
     private Field field;
     private Field previousTurn;
     private volatile static Board uniqueInstance;
 
-
     private Board(){
-
+        //Putting white figures on the board
         Figure whitePawnA = new Pawn(new Field(6,0), Color.WHITE);
         Figure whitePawnB = new Pawn(new Field(6,1), Color.WHITE);
         Figure whitePawnC = new Pawn(new Field(6,2), Color.WHITE);
@@ -38,24 +38,24 @@ public class Board implements Subject{
         Figure whiteBishopF = new Bishop(new Field(7,5), Color.WHITE);
         Figure whiteQueen = new Queen(new Field(7,3), Color.WHITE);
         Figure whiteKing = new King(new Field(7,4), Color.WHITE);
-        //Adding to figures
-        figures.add(whitePawnA);
-        figures.add(whitePawnB);
-        figures.add(whitePawnC);
-        figures.add(whitePawnD);
-        figures.add(whitePawnE);
-        figures.add(whitePawnF);
-        figures.add(whitePawnG);
-        figures.add(whitePawnH);
-        figures.add(whiteRockA);
-        figures.add(whiteRockH);
-        figures.add(whiteKnightB);
-        figures.add(whiteKnightG);
-        figures.add(whiteBishopC);
-        figures.add(whiteBishopF);
-        figures.add(whiteQueen);
-        figures.add(whiteKing);
-        //Filling black figures on the board
+        //Adding to figures collection
+        register(whitePawnA);
+        register(whitePawnB);
+        register(whitePawnC);
+        register(whitePawnD);
+        register(whitePawnE);
+        register(whitePawnF);
+        register(whitePawnG);
+        register(whitePawnH);
+        register(whiteRockA);
+        register(whiteRockH);
+        register(whiteKnightB);
+        register(whiteKnightG);
+        register(whiteBishopC);
+        register(whiteBishopF);
+        register(whiteQueen);
+        register(whiteKing);
+        //Putting black figures on the board
         Figure blackPawnA = new Pawn(new Field(1,0), Color.BLACK);
         Figure blackPawnB = new Pawn(new Field(1,1), Color.BLACK);
         Figure blackPawnC = new Pawn(new Field(1,2), Color.BLACK);
@@ -72,28 +72,29 @@ public class Board implements Subject{
         Figure blackBishopF = new Bishop(new Field(0,5), Color.BLACK);
         Figure blackQueen = new Queen(new Field(0,3), Color.BLACK);
         Figure blackKing = new King(new Field(0,4), Color.BLACK);
-        //Adding to figures
-        figures.add(blackPawnA);
-        figures.add(blackPawnB);
-        figures.add(blackPawnC);
-        figures.add(blackPawnD);
-        figures.add(blackPawnE);
-        figures.add(blackPawnF);
-        figures.add(blackPawnG);
-        figures.add(blackPawnH);
-        figures.add(blackRockA);
-        figures.add(blackRockH);
-        figures.add(blackKnightB);
-        figures.add(blackKnightG);
-        figures.add(blackBishopC);
-        figures.add(blackBishopF);
-        figures.add(blackQueen);
-        figures.add(blackKing);
-        for (int i = 0; i < SIZE; i++){
-            for (int j = 0; j < SIZE; j++){
-                listOfFields.add(new Field(i,j));
-            }
-        }
+        //Adding to figures collection
+        register(blackPawnA);
+        register(blackPawnB);
+        register(blackPawnC);
+        register(blackPawnD);
+        register(blackPawnE);
+        register(blackPawnF);
+        register(blackPawnG);
+        register(blackPawnH);
+        register(blackRockA);
+        register(blackRockH);
+        register(blackKnightB);
+        register(blackKnightG);
+        register(blackBishopC);
+        register(blackBishopF);
+        register(blackQueen);
+        register(blackKing);
+        //TODO maybe could be deleted
+//        for (int i = 0; i < SIZE; i++){
+//            for (int j = 0; j < SIZE; j++){
+//                listOfFields.add(new Field(i,j));
+//            }
+//        }
         for(Observer currentFigure : figures){
             if (((Figure)currentFigure).getColor() == Color.WHITE){
                 whiteFigures.add(currentFigure);
@@ -121,7 +122,7 @@ public class Board implements Subject{
         return uniqueInstance;
     }
 
-    public static List<Figure> getFiguresByClass(Class clazz){
+    public List<Figure> getFiguresByClass(Class clazz){
         List<Figure> returnedFigures = new ArrayList<Figure>();
         for (Object figure : figures){
             if (figure.getClass() == clazz){
@@ -131,35 +132,53 @@ public class Board implements Subject{
         return returnedFigures;
     }
 
-    public Field getPreviousTurn() {
-        return previousTurn;
+//    public Field getPreviousTurn() {
+//        return previousTurn;
+//    }
+//
+//    public void setPreviousTurn(Field previousTurn) {
+//        this.previousTurn = previousTurn;
+//    }
+
+    private void updateFieldsUnderWhiteInfluence(){
+        fieldsUnderWhiteInfluence.clear();
+        for (Observer whiteFigure : whiteFigures){
+            for (Field field : ((Figure) whiteFigure).getFieldsUnderMyInfluence()){
+                fieldsUnderWhiteInfluence.add(field);
+            }
+        }
     }
 
-    public void setPreviousTurn(Field previousTurn) {
-        this.previousTurn = previousTurn;
+    private void updateFieldsUnderBlackInfluence(){
+        fieldsUnderBlackInfluence.clear();
+        for (Observer blackFigure : blackFigures){
+            for (Field field : ((Figure) blackFigure).getFieldsUnderMyInfluence()){
+                fieldsUnderBlackInfluence.add(field);
+            }
+        }
     }
 
-    public static Set<Observer> getWhiteFigures() {
+    public Set<Observer> getWhiteFigures() {
         return whiteFigures;
     }
 
-    public static List<Turn> getPossibleTurnsAndKillings() {
+    public List<Turn> getPossibleTurnsAndKillings() {
         return possibleTurnsAndKillings;
     }
 
-    public static Set<Observer> getBlackFigures() {
+    public Set<Observer> getBlackFigures() {
         return blackFigures;
     }
 
-    public static Set<Observer> getFigures() {
+    public Set<Observer> getFigures() {
         return figures;
     }
 
-    public static Set<Field> getFieldsUnderWhiteInfluence() {
+    public Set<Field> getFieldsUnderWhiteInfluence() {
         return fieldsUnderWhiteInfluence;
     }
 
-    public static Set<Field> getFieldsUnderBlackInfluence() {
+    public Set<Field> getFieldsUnderBlackInfluence() {
         return fieldsUnderBlackInfluence;
     }
 
@@ -168,16 +187,8 @@ public class Board implements Subject{
         for (Observer currentFigure : figures){
             ((Figure)currentFigure).update();
         }
-        for (Observer whiteFigure : whiteFigures){
-            for (Field field : ((Figure) whiteFigure).getFieldsUnderMyInfluence()){
-                fieldsUnderWhiteInfluence.add(field);
-            }
-        }
-        for (Observer blackFigure : blackFigures){
-            for (Field field : ((Figure) blackFigure).getFieldsUnderMyInfluence()){
-                fieldsUnderBlackInfluence.add(field);
-            }
-        }
+        updateFieldsUnderWhiteInfluence();
+        updateFieldsUnderBlackInfluence();
     }
 
     public void register(Observer figure) {
@@ -185,6 +196,13 @@ public class Board implements Subject{
     }
 
     public void removeFigure(Observer figure) {
+        figures.remove(figure);
+        if (((Figure)figure).getColor() == Color.BLACK){
+            blackFigures.remove(figure);
+        } else {
+            whiteFigures.remove(figure);
+        }
+        //TODO check what is going on in the following rows.
         Iterator<Observer> iterator = figures.iterator();
         List<Figure> list = new ArrayList<Figure>();
         while (iterator.hasNext()){

@@ -32,7 +32,7 @@ public class Tests  {
         }else {
             Board.getInstance().getWhiteFigures().remove(knight);
         }
-        assertEquals(31, Board.getFigures().size());
+        assertEquals(31, Board.getInstance().getFigures().size());
         assertEquals(15, Board.getInstance().getWhiteFigures().size());
     }
 }

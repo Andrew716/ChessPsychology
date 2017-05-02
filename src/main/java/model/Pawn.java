@@ -96,7 +96,7 @@ public class Pawn extends Figure {
                 }
             }
         }
-        enPassant();
+//        enPassant();
         fillAttackedAndProtectedFigures();
     }
 
@@ -117,41 +117,41 @@ public class Pawn extends Figure {
         }
     }
 
-    private void enPassant(){
-        if (this.getColor() == Color.WHITE){
-            if(this.getField().getX() == 3){
-                Field leftField = new Field(3, this.getField().getY()-1);
-                if (leftField.isTaken() && leftField.getFigureByField().getColor() == Color.BLACK && leftField.getFigureByField().getClass() == Pawn.class){
-                    if (Board.getInstance().getPreviousTurn().equals(leftField)){
-                        this.getAttackedFields().add(new Field(2, this.getField().getY() - 1));
-                        this.getWhoCouldBeKilled().add(leftField.getFigureByField());
-                    }
-                }
-                Field rightField = new Field(3, this.getField().getY() + 1);
-                if (rightField.isTaken() && rightField.getFigureByField().getColor() == Color.BLACK && rightField.getFigureByField().getClass() == Pawn.class){
-                    if (Board.getInstance().getPreviousTurn().equals(rightField)){
-                        this.getAttackedFields().add(new Field(2, this.getField().getY() + 1));
-                        this.getWhoCouldBeKilled().add(rightField.getFigureByField());
-                    }
-                }
-            }
-        }else {
-            if (this.getField().getX() == 4){
-                Field leftField = new Field(4, this.getField().getY() - 1);
-                if (leftField.isTaken() && leftField.getFigureByField().getColor() == Color.WHITE && leftField.getFigureByField().getClass() == Pawn.class){
-                    if (Board.getInstance().getPreviousTurn().equals(leftField)){
-                        this.getAttackedFields().add(new Field(5, this.getField().getY() - 1));
-                        this.getWhoCouldBeKilled().add(leftField.getFigureByField());
-                    }
-                }
-                Field rightField = new Field(4, this.getField().getY() + 1);
-                if (rightField.isTaken() && rightField.getFigureByField().getColor() == Color.WHITE && rightField.getFigureByField().getClass() == Pawn.class){
-                    if (Board.getInstance().getPreviousTurn().equals(rightField)){
-                        this.getAttackedFields().add(new Field(5, this.getField().getY() + 1));
-                        this.getWhoCouldBeKilled().add(rightField.getFigureByField());
-                    }
-                }
-            }
-        }
-    }
+//    private void enPassant(){
+//        if (this.getColor() == Color.WHITE){
+//            if(this.getField().getX() == 3){
+//                Field leftField = new Field(3, this.getField().getY()-1);
+//                if (leftField.isTaken() && leftField.getFigureByField().getColor() == Color.BLACK && leftField.getFigureByField().getClass() == Pawn.class){
+//                    if (Board.getInstance().getPreviousTurn().equals(leftField)){
+//                        this.getAttackedFields().add(new Field(2, this.getField().getY() - 1));
+//                        this.getWhoCouldBeKilled().add(leftField.getFigureByField());
+//                    }
+//                }
+//                Field rightField = new Field(3, this.getField().getY() + 1);
+//                if (rightField.isTaken() && rightField.getFigureByField().getColor() == Color.BLACK && rightField.getFigureByField().getClass() == Pawn.class){
+//                    if (Board.getInstance().getPreviousTurn().equals(rightField)){
+//                        this.getAttackedFields().add(new Field(2, this.getField().getY() + 1));
+//                        this.getWhoCouldBeKilled().add(rightField.getFigureByField());
+//                    }
+//                }
+//            }
+//        }else {
+//            if (this.getField().getX() == 4){
+//                Field leftField = new Field(4, this.getField().getY() - 1);
+//                if (leftField.isTaken() && leftField.getFigureByField().getColor() == Color.WHITE && leftField.getFigureByField().getClass() == Pawn.class){
+//                    if (Board.getInstance().getPreviousTurn().equals(leftField)){
+//                        this.getAttackedFields().add(new Field(5, this.getField().getY() - 1));
+//                        this.getWhoCouldBeKilled().add(leftField.getFigureByField());
+//                    }
+//                }
+//                Field rightField = new Field(4, this.getField().getY() + 1);
+//                if (rightField.isTaken() && rightField.getFigureByField().getColor() == Color.WHITE && rightField.getFigureByField().getClass() == Pawn.class){
+//                    if (Board.getInstance().getPreviousTurn().equals(rightField)){
+//                        this.getAttackedFields().add(new Field(5, this.getField().getY() + 1));
+//                        this.getWhoCouldBeKilled().add(rightField.getFigureByField());
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

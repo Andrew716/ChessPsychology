@@ -1,5 +1,6 @@
 package controler;
 
+import utils.Parser;
 import model.*;
 
 import java.io.File;
@@ -31,18 +32,19 @@ public class Main {
 //        printFile();
 //
 
-        Thread thread = new Thread(new Runnable() {
 
-            public void run() {
-
-                while(run);
-                run = true;
-            }
-
-        });
-
-        thread.start();
-        run = false;
+//        Thread thread = new Thread(new Runnable() {
+//
+//            public void run() {
+//
+//                while(run);
+//                run = true;
+//            }
+//
+//        });
+//
+//        thread.start();
+//        run = false;
 
 //        System.out.println("White figures");
 //        Iterator figureIterator = Board.getFigures().iterator();
@@ -110,7 +112,7 @@ public class Main {
                     System.out.println(sCurrentLine + " ==== after turn ====" + matcher.group(2));
                     printFigures();
                     System.out.println("White figures");
-                    Iterator iterator = Board.getFigures().iterator();
+                    Iterator iterator = Board.getInstance().getFigures().iterator();
                     while (iterator.hasNext()){
                         Figure currentFigure = (Figure) iterator.next();
                         if (currentFigure.getColor() == Color.WHITE){
@@ -118,7 +120,7 @@ public class Main {
                         }
                     }
                     System.out.println("Black figures");
-                    Iterator iterator2 = Board.getFigures().iterator();
+                    Iterator iterator2 = Board.getInstance().getFigures().iterator();
                     while (iterator2.hasNext()){
                         Figure currentFigure = (Figure) iterator2.next();
                         if (currentFigure.getColor() == Color.BLACK){

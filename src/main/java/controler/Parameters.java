@@ -25,7 +25,7 @@ public class Parameters {
     }
 
     public static void countFirstParameterForSpecialTurns(int turnsNumber){
-        Turn turn = Board.getPossibleTurnsAndKillings().get(turnsNumber);
+        Turn turn = Board.getInstance().getPossibleTurnsAndKillings().get(turnsNumber);
         int numberOfFiguresIAttack = turn.getFigure().getWhoCouldBeKilled().size();
     }
 

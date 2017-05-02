@@ -1,5 +1,6 @@
-package controler;
+package utils;
 
+import controler.Main;
 import model.*;
 
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class Parser {
         if (isWhite){
             iterator = Board.getInstance().getWhiteFigures().iterator();
         }else {
-            iterator = Board.getBlackFigures().iterator();
+            iterator = Board.getInstance().getBlackFigures().iterator();
         }
         while (iterator.hasNext()){
             Observer currentFigure = iterator.next();

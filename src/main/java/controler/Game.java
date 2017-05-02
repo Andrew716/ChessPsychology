@@ -19,7 +19,7 @@ public class Game {
     public void setPossibleTurnsAndKillings(Color color){
         possibleTurnsAndKillings.clear();
         King king = null;
-        List kings = Board.getFiguresByClass(King.class);
+        List kings = Board.getInstance().getFiguresByClass(King.class);
         for (int i = 0; i < kings.size(); i++){
             if (((King)kings.get(0)).getColor() == color){
                 king = (King)kings.get(0);
@@ -49,9 +49,9 @@ public class Game {
         }else {
             Set figures;
             if (color == Color.BLACK){
-                figures = Board.getBlackFigures();
+                figures = Board.getInstance().getBlackFigures();
             }else {
-                figures = Board.getWhiteFigures();
+                figures = Board.getInstance().getWhiteFigures();
             }
             StringBuilder turn;
             for (Object figure : figures){
@@ -84,10 +84,10 @@ public class Game {
         boolean isBlack;
         List<StringBuilder> turns = new ArrayList<StringBuilder>();
         if (color == Color.BLACK){
-            figures = Board.getBlackFigures();
+            figures = Board.getInstance().getBlackFigures();
             isBlack = true;
         }else {
-            figures = Board.getWhiteFigures();
+            figures = Board.getInstance().getWhiteFigures();
             isBlack = false;
         }
         for (Object figure : figures){
@@ -148,13 +148,14 @@ public class Game {
     }
 
     public static List<String> castling(Color color){
+        Board board = Board.getInstance();
         List<String> list = new ArrayList<String>();
-        List<Figure> rocks = Board.getFiguresByClass(Rock.class);
+        List<Figure> rocks = Board.getInstance().getFiguresByClass(Rock.class);
         Set figures;
         if (color == Color.BLACK){
-            figures = Board.getBlackFigures();
+            figures = board.getBlackFigures();
         }else {
-            figures = Board.getWhiteFigures();
+            figures = board.getWhiteFigures();
         }
         for (Object figure : figures){
             if (figure.getClass() == King.class){
