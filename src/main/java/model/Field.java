@@ -9,13 +9,12 @@ public class Field {
 
     private int x;
     private int y;
-    private static Map<Integer, Character> horizontal;
-    private static Map<Integer, Integer> vertical;
-    private static Map<Character, Integer> invertedHorizontal;
-    private static Map<Integer, Integer> invertedVertical;
+    private static final Map<Integer, Character> horizontal = new LinkedHashMap<Integer, Character>();
+    private static final Map<Integer, Integer> vertical = new LinkedHashMap<Integer, Integer>();
+    private static final Map<Character, Integer> invertedHorizontal = new LinkedHashMap<Character, Integer>();
+    private static final Map<Integer, Integer> invertedVertical = new LinkedHashMap<Integer, Integer>();;
 
     static {
-        invertedVertical = new LinkedHashMap<Integer, Integer>();
         invertedVertical.put(8, 0);
         invertedVertical.put(7, 1);
         invertedVertical.put(6, 2);
@@ -27,7 +26,6 @@ public class Field {
     }
 
     static {
-        invertedHorizontal = new LinkedHashMap<Character, Integer>();
         invertedHorizontal.put('a', 0);
         invertedHorizontal.put('b', 1);
         invertedHorizontal.put('c', 2);
@@ -39,7 +37,6 @@ public class Field {
     }
 
     static {
-        horizontal = new LinkedHashMap<Integer, Character>();
         horizontal.put(0, 'a');
         horizontal.put(1, 'b');
         horizontal.put(2, 'c');
@@ -51,7 +48,6 @@ public class Field {
     }
 
     static {
-        vertical = new LinkedHashMap<Integer, Integer>();
         vertical.put(0, 8);
         vertical.put(1, 7);
         vertical.put(2, 6);
@@ -66,8 +62,6 @@ public class Field {
         if (x>=0 && x<Board.SIZE && y>=0 && y<Board.SIZE){
             this.x = x;
             this.y = y;
-        } else {
-            throw new IllegalArgumentException("x = " + x + " y = " + y);
         }
     }
 
@@ -96,13 +90,7 @@ public class Field {
     }
 
     public boolean isTaken(){
-        Board board = Board.getInstance();
-        for(Observer figure : board.getFigures()){
-            if(((Figure)figure).getField().getX() == this.getX() && ((Figure) figure).getField().getY() == this.getY()){
-                return true;
-            }
-        }
-        return false;
+        return Board.getTakenFields().contains(this);
     }
 
     //TODO refactor this method. Should be placed in Board class.
@@ -142,14 +130,14 @@ public class Field {
 //    }
 
     //TODO refactor this method. Should be placed in Board class.
-    public Figure getFigureByField(){
-        for(Observer figure : Board.getInstance().getFigures()){
-            if(((Figure)figure).getField().getX() == this.getX() && ((Figure) figure).getField().getY() == this.getY()){
-                return (Figure) figure;
-            }
-        }
-        return null;
-    }
+//    public Figure getFigureByField(){
+//        for(Observer figure : Board.getInstance().getFigures()){
+//            if(((Figure)figure).getField().getX() == this.getX() && ((Figure) figure).getField().getY() == this.getY()){
+//                return (Figure) figure;
+//            }
+//        }
+//        return null;
+//    }
 
     @Override
     public boolean equals(Object o) {

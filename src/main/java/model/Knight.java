@@ -16,20 +16,11 @@ public class Knight extends Figure {
         attackedFields();
     }
 
+    @Override
     public void possibleTurns(){
-        Iterator<Field> iterator = this.getAttackedFields().iterator();
-        while (iterator.hasNext()){
-            Field currentField = iterator.next();
-            if (currentField.isTaken()){
-                if (this.getColor() == currentField.getFigureByField().getColor()){
-                    currentField.getFigureByField().addAlien(this);
-                }else {
-                    currentField.getFigureByField().addEnemy(this);
-                    this.getWhoCouldBeKilled().add(currentField.getFigureByField());
-                }
-            }else {
-                this.getPossibleFieldsToMove().add(currentField);
-                this.getFieldsUnderMyInfluence().add(currentField);
+        for (Field field : getAttackedFields()){
+            if(!checkingFieldForTaken(field)){
+                this.getFieldsUnderMyInfluence().add(field);
             }
         }
     }

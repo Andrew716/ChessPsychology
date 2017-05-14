@@ -11,7 +11,6 @@ public class Rock extends Figure {
     public Rock(Field field, Color color) {
         super(field, color);
         attackedFields();
-//        possibleTurns();
     }
 
     public boolean isOpportunityToCastling() {
@@ -26,7 +25,7 @@ public class Rock extends Figure {
     public void possibleTurns() {
         for (int i = this.getField().getX() + 1; i < Board.SIZE; i++){
             Field field = new Field(i, this.getField().getY());
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -34,7 +33,7 @@ public class Rock extends Figure {
         }
         for (int i = this.getField().getX() - 1; i >= 0; i--){
             Field field = new Field(i, this.getField().getY());
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -42,7 +41,7 @@ public class Rock extends Figure {
         }
         for (int j = this.getField().getY() + 1; j < Board.SIZE; j++){
             Field field = new Field(this.getField().getX(), j);
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -50,7 +49,7 @@ public class Rock extends Figure {
         }
         for (int j = this.getField().getY() - 1; j >= 0; j--){
             Field field = new Field(this.getField().getX(), j);
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -71,5 +70,4 @@ public class Rock extends Figure {
             }
         }
     }
-
 }

@@ -18,7 +18,7 @@ public class Queen extends Figure {
     public void possibleTurns() {
         for (int i = this.getField().getX() + 1; i < Board.SIZE; i++){
             Field field = new Field(i, this.getField().getY());
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -26,7 +26,7 @@ public class Queen extends Figure {
         }
         for (int i = this.getField().getX() - 1; i >= 0; i--){
             Field field = new Field(i, this.getField().getY());
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -34,7 +34,7 @@ public class Queen extends Figure {
         }
         for (int j = this.getField().getY() + 1; j < Board.SIZE; j++){
             Field field = new Field(this.getField().getX(), j);
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -42,7 +42,7 @@ public class Queen extends Figure {
         }
         for (int j = this.getField().getY() - 1; j >= 0; j--){
             Field field = new Field(this.getField().getX(), j);
-            if (checksFieldsForTaken(field)){
+            if (checkingFieldForTaken(field)){
                 break;
             }else {
                 this.getFieldsUnderMyInfluence().add(field);
@@ -53,7 +53,7 @@ public class Queen extends Figure {
             for (int j = this.getField().getY() + 1; j < Board.SIZE; j++){
                 if (i < Board.SIZE && j < Board.SIZE &&  abs(this.getField().getX() - i) == abs(this.getField().getY() - j)){
                     Field field = new Field(i, j);
-                    if (checksFieldsForTaken(field)){
+                    if (checkingFieldForTaken(field)){
                         flag = true;
                         break;
                     }else {
@@ -70,7 +70,7 @@ public class Queen extends Figure {
             for (int j = this.getField().getY() - 1; j >= 0; j--){
                 if (i < Board.SIZE && j >= 0 && abs(this.getField().getX() - i) == abs(this.getField().getY() - j)){
                     Field field = new Field(i,j);
-                    if (checksFieldsForTaken(field)){
+                    if (checkingFieldForTaken(field)){
                         flag = true;
                         break;
                     }else {
@@ -87,7 +87,7 @@ public class Queen extends Figure {
             for (int j = this.getField().getY() + 1; j < Board.SIZE; j++){
                 if (i >= 0 && abs(this.getField().getX() - i) == abs(this.getField().getY() - j)){
                     Field field = new Field(i,j);
-                    if (checksFieldsForTaken(field)){
+                    if (checkingFieldForTaken(field)){
                         flag = true;
                         break;
                     }else {
@@ -104,7 +104,7 @@ public class Queen extends Figure {
             for (int j = this.getField().getY() - 1; j >= 0; j--){
                 if (i >= 0 && j >= 0 && abs(this.getField().getX() - i) == abs(this.getField().getY() - j)){
                     Field field = new Field(i,j);
-                    if (checksFieldsForTaken(field)){
+                    if (checkingFieldForTaken(field)){
                         flag = true;
                         break;
                     }else {

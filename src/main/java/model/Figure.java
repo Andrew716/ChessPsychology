@@ -12,8 +12,6 @@ public abstract class Figure implements Observer {
     private Color color;
     private Set<Figure> enemiesAttackMe = new LinkedHashSet<Figure>();
     private Set<Figure> aliensProtectMe = new LinkedHashSet<Figure>();
-    private int numberOfAliensProtectMe;
-    private int numberOfEnemiesAttackMe;
     private Set<Figure> whoCouldBeKilled = new LinkedHashSet<Figure>();
     private Set<Field> attackedFields = new LinkedHashSet<Field>();
     private Set<Field> fieldsUnderMyInfluence = new LinkedHashSet<Field>();
@@ -89,7 +87,6 @@ public abstract class Figure implements Observer {
 
     public void addEnemy(Figure figure){
         enemiesAttackMe.add(figure);
-        numberOfEnemiesAttackMe++;
     }
 
     public Set<Figure> getEnemiesAttackMe() {
@@ -100,45 +97,34 @@ public abstract class Figure implements Observer {
         return aliensProtectMe;
     }
 
-    public int getNumberOfAliensProtectMe() {
-        return numberOfAliensProtectMe;
-    }
-
-    public int getNumberOfEnemiesAttackMe() {
-        return numberOfEnemiesAttackMe;
-    }
-
     public Set<Field> getPossibleFieldsToMove() {
         return possibleFieldsToMove;
     }
 
     public void addAlien(Figure figure){
         aliensProtectMe.add(figure);
-        numberOfAliensProtectMe++;
     }
 
 //    public void possibleTurns(){
-//        Iterator<Field> iterator = attackedFields.iterator();
-//        while (iterator.hasNext()){
-//            Field currentField = iterator.next();
-//            if (currentField.isTaken()){
-//                if (this.getColor() == currentField.getFigureByField().getColor()){
-//                    currentField.getFigureByField().addAlien(this);
+//        for (Field field : attackedFields){
+//            if (field.isTaken()){
+//                if (this.getColor() == field.getFigureByField().getColor()){
+//                    field.getFigureByField().addAlien(this);
 //                }else {
-//                    currentField.getFigureByField().addEnemy(this);
-//                    this.getWhoCouldBeKilled().add(currentField.getFigureByField());
+//                    field.getFigureByField().addEnemy(this);
+//                    this.getWhoCouldBeKilled().add(field.getFigureByField());
 //                }
 //            }else {
-//                possibleFieldsToMove.add(currentField);
+//                possibleFieldsToMove.add(field);
 //            }
 //        }
 //    }
 
-    protected boolean checksFieldsForTaken(Field field){
+    protected boolean checkingFieldForTaken(Field field){
         if (!field.isTaken()){
             this.getPossibleFieldsToMove().add(field);
         }else {
-            Figure tempFigure = field.getFigureByField();
+            Figure tempFigure = Board.getFieldToFigure().get(field);
             if (tempFigure.getColor() == this.getColor()){
                 tempFigure.addAlien(this);
                 return true;
@@ -153,10 +139,7 @@ public abstract class Figure implements Observer {
 
     @Override
     public boolean equals(Object o){
-        if (this.getClass() != o.getClass()){
-            return false;
-        }
-        return this.field.equals(((Figure)o).getField())
+        return this.getClass() == o.getClass() && this.field.equals(((Figure)o).getField())
                 && this.getColor() == ((Figure)o).getColor();
     }
 

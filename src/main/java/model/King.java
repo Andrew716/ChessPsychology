@@ -1,8 +1,6 @@
 package model;
 
-import java.util.Iterator;
 import java.util.Set;
-
 import static java.lang.Math.abs;
 
 /**
@@ -17,33 +15,32 @@ public class King extends Figure {
         attackedFields();
     }
 
-//TODO fix bug comparing possible fields for king if some fields are under attack
-
+    @Override
     public void possibleTurns(){
-        Set set;
+        Set<Field> enemyInfluence;
         Board board = Board.getInstance();
-        for (Object currentField : this.getAttackedFields()){
+        for (Field field : this.getAttackedFields()){
+            Figure figure = Board.getFieldToFigure().get(field);
             if (this.getColor() == Color.BLACK){
-                set = board.getFieldsUnderWhiteInfluence();
+                enemyInfluence = board.getFieldsUnderWhiteInfluence();
             }else {
-                set = board.getFieldsUnderBlackInfluence();
+                enemyInfluence = board.getFieldsUnderBlackInfluence();
             }
-            if (!set.contains(currentField)){
-                if (((Field)currentField).isTaken()){
-                    if (this.getColor() == ((Field)currentField).getFigureByField().getColor()){
-                        ((Field)currentField).getFigureByField().addAlien(this);
+            if (!enemyInfluence.contains(field)){
+                if (figure != null){
+                    if (this.getColor() == figure.getColor()){
+                        figure.addAlien(this);
                     }else {
-                        ((Field)currentField).getFigureByField().addEnemy(this);
-                        this.getWhoCouldBeKilled().add(((Field)currentField).getFigureByField());
+                        figure.addEnemy(this);
+                        this.getWhoCouldBeKilled().add(figure);
                     }
                 }else {
-                    this.getPossibleFieldsToMove().add((Field) currentField);
-                    this.getFieldsUnderMyInfluence().add((Field)currentField);
+                    this.getPossibleFieldsToMove().add(field);
+                    this.getFieldsUnderMyInfluence().add(field);
                 }
             }
         }
     }
-
 
     public boolean isOpportunityToCastling() {
         return opportunityToCastling;
@@ -54,29 +51,14 @@ public class King extends Figure {
     }
 
     public boolean isUnderAttack(){
-        Set set;
+        Set<Field> enemyInfluence;
         Board board = Board.getInstance();
         if (this.getColor() == Color.WHITE){
-            set = board.getBlackFigures();
+            enemyInfluence = board.getFieldsUnderBlackInfluence();
         }else {
-            set = board.getWhiteFigures();
+            enemyInfluence = board.getFieldsUnderWhiteInfluence();
         }
-        for (Object figure : set){
-            if(figure.getClass() == Knight.class){
-                for (Field currentField : ((Figure)figure).getPossibleFieldsToMove()){
-                    if(this.getField().equals(currentField)){
-                        return true;
-                    }
-                }
-            }else{
-                for (Field currentField : ((Figure)figure).getAttackedFields()){
-                    if (this.getField().equals(currentField)){
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        return enemyInfluence.contains(this.getField());
     }
 
     @Override

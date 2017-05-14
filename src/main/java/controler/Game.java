@@ -30,7 +30,7 @@ public class Game {
         if (king.isUnderAttack()){
             if (king.getPossibleFieldsToMove().isEmpty()){
                 for (Figure enemy : king.getWhoCouldBeKilled()){
-                    if (enemy.getNumberOfAliensProtectMe() >= 1){
+                    if (enemy.getAliensProtectMe().size() >= 1){
                         //TODO other alien figures could protect me
                         System.out.println("Mat");
                         return;

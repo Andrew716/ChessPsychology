@@ -14,8 +14,8 @@ public class Board implements Subject{
     private Set<Field> fieldsUnderWhiteInfluence = new LinkedHashSet<Field>();
     private Set<Field> fieldsUnderBlackInfluence = new LinkedHashSet<Field>();
     private List<Turn> possibleTurnsAndKillings = new ArrayList<Turn>();
-    //TODO maybe could be deleted
-//    private final static Set<Field> listOfFields = new LinkedHashSet<Field>();
+    private static final Set<Field> takenFields = new LinkedHashSet<Field>();
+    private static final Map<Field, Figure> fieldToFigure = new HashMap<Field, Figure>();
     private Field field;
     private Field previousTurn;
     private volatile static Board uniqueInstance;
@@ -89,19 +89,13 @@ public class Board implements Subject{
         register(blackBishopF);
         register(blackQueen);
         register(blackKing);
-        //TODO maybe could be deleted
-//        for (int i = 0; i < SIZE; i++){
-//            for (int j = 0; j < SIZE; j++){
-//                listOfFields.add(new Field(i,j));
-//            }
-//        }
-        for(Observer currentFigure : figures){
-            if (((Figure)currentFigure).getColor() == Color.WHITE){
-                whiteFigures.add(currentFigure);
-            }else {
-                blackFigures.add(currentFigure);
-            }
-            ((Figure)currentFigure).possibleTurns();
+        //TODO change the logic for searching possible turns for each figure.
+        //TODO Because it throws StackOverFlowError
+        setTakenFields();
+//        blackPawnA.possibleTurns();
+        for (Observer figure : figures){
+            if (((Figure) figure).getColor() == Color.WHITE && (figure.getClass() == Pawn.class || figure.getClass() == Rock.class))
+            ((Figure) figure).possibleTurns();
         }
         for (Observer whiteFigure : whiteFigures){
             for (Field field : ((Figure) whiteFigure).getFieldsUnderMyInfluence()){
@@ -158,6 +152,10 @@ public class Board implements Subject{
         }
     }
 
+    public static boolean isFieldValid(Field field){
+        return field.getX() >= 0 && field.getX() < SIZE && field.getY() >= 0 && field.getY() < SIZE;
+    }
+
     public Set<Observer> getWhiteFigures() {
         return whiteFigures;
     }
@@ -182,6 +180,14 @@ public class Board implements Subject{
         return fieldsUnderBlackInfluence;
     }
 
+    public static Map<Field, Figure> getFieldToFigure(){
+        return fieldToFigure;
+    }
+
+    public Field getPreviousTurn() {
+        return previousTurn;
+    }
+
     public void notify(Observer figure) {
         figure.update(field);
         for (Observer currentFigure : figures){
@@ -189,10 +195,17 @@ public class Board implements Subject{
         }
         updateFieldsUnderWhiteInfluence();
         updateFieldsUnderBlackInfluence();
+        updateTakenFields(figure);
     }
 
     public void register(Observer figure) {
         figures.add(figure);
+        if (((Figure) figure).getColor() == Color.WHITE){
+            whiteFigures.add(figure);
+        } else {
+            blackFigures.add(figure);
+        }
+        fieldToFigure.put(((Figure) figure).getField(), ((Figure)figure));
     }
 
     public void removeFigure(Observer figure) {
@@ -202,34 +215,32 @@ public class Board implements Subject{
         } else {
             whiteFigures.remove(figure);
         }
-        //TODO check what is going on in the following rows.
-        Iterator<Observer> iterator = figures.iterator();
-        List<Figure> list = new ArrayList<Figure>();
-        while (iterator.hasNext()){
-            Figure currentFigure = (Figure) iterator.next();
-            list.add(currentFigure);
-        }
-        figures.clear();
-        whiteFigures.clear();
-        blackFigures.clear();
-        for (Figure currentFigure : list){
-            figures.add(currentFigure);
-            if (currentFigure.getColor() == Color.BLACK){
-                blackFigures.add(currentFigure);
-            }else {
-                whiteFigures.add(currentFigure);
+        fieldToFigure.remove(((Figure) figure).getField());
+    }
+
+    public void setNewCoordinates(Field field, Observer figure){
+        if (figures.contains(figure)){
+            this.field = field;
+            notify(figure);
+            for (Observer figure1 : figures){
+                ((Figure)figure1).possibleTurns();
+                ((Figure)figure1).attackedFields();
             }
         }
     }
 
-    public void setCoordinates(Field field, Observer figure){
-        if (figures.contains(figure)){
-            this.field = field;
-            notify(figure);
-        }
-        for (Observer figure1 : figures){
-            ((Figure)figure1).possibleTurns();
-            ((Figure)figure1).attackedFields();
+    public static Set<Field> getTakenFields() {
+        return takenFields;
+    }
+
+    private void updateTakenFields(Observer figure){
+        takenFields.remove(((Figure) figure).getField());
+        takenFields.add(field);
+    }
+
+    private void setTakenFields(){
+        for (Observer figure : figures) {
+            takenFields.add(((Figure) figure).getField());
         }
     }
 }

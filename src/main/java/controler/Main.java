@@ -26,41 +26,18 @@ public class Main {
 
 
     public static void main(String[] args) throws InterruptedException{
-//        Board board = Board.getInstance();
+        Board board = Board.getInstance();
 //       printAllPossibleTurns();
 //        printFigures();
 //        printFile();
-//
-
-
-//        Thread thread = new Thread(new Runnable() {
-//
-//            public void run() {
-//
-//                while(run);
-//                run = true;
-//            }
-//
-//        });
-//
-//        thread.start();
-//        run = false;
-
-//        System.out.println("White figures");
-//        Iterator figureIterator = Board.getFigures().iterator();
-//        while (figureIterator.hasNext()){
-//            Figure currentFigure = (Figure) figureIterator.next();
-//            if (currentFigure.getColor() == Color.WHITE){
-//                System.out.println(currentFigure.toString() + currentFigure.getPossibleFieldsToMove());
-//            }
+        System.out.println(Board.getTakenFields());
+        System.out.println("White figures");
+//        for (Observer figure : board.getWhiteFigures()){
+//            System.out.println(figure.toString() + ((Figure)figure).getAttackedFields());
 //        }
 //        System.out.println("Black figures");
-//        Iterator iterator1 = Board.getFigures().iterator();
-//        while (iterator1.hasNext()){
-//            Figure currentFigure = (Figure) iterator1.next();
-//            if (currentFigure.getColor() == Color.BLACK){
-//                System.out.println(currentFigure.toString() + currentFigure.getPossibleFieldsToMove());
-//            }
+//        for (Observer figure : board.getBlackFigures()){
+//            System.out.println(figure.toString() + ((Figure) figure).getAttackedFields());
 //        }
 //        Figure knight = new Knight(new Field(7, 1), Color.WHITE);
 //        board.removeFigure(knight);
@@ -154,7 +131,7 @@ public class Main {
             for (int j = 0; j < Board.SIZE; j++){
                 Field currentPoint = new Field(i, j);
                 if (currentPoint.isTaken()){
-                    System.out.print(" " + print(currentPoint.getFigureByField()) + " ");
+                    System.out.print(" " + print(Board.getFieldToFigure().get(currentPoint)) + " ");
                 }else {
                     System.out.print("   ");
                 }
