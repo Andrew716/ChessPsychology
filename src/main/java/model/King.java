@@ -50,6 +50,10 @@ public class King extends Figure {
         this.opportunityToCastling = opportunityToCastling;
     }
 
+
+
+    //Test commit
+
     public boolean isUnderAttack(){
         Set<Field> enemyInfluence;
         Board board = Board.getInstance();
